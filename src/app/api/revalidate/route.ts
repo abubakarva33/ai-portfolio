@@ -1,135 +1,152 @@
-/**
- * On-Demand Revalidation Endpoint
- * Route: POST /api/revalidate
- *
- * Usage:
- *   POST /api/revalidate
- *   Headers: { Authorization: "Bearer <REVALIDATE_SECRET>" }
- *   Body (JSON): one or more of:
- *     { "tag": "service-google-business-repair" }   — revalidate by cache tag
- *     { "path": "/services/google-business-repair" } — by path
- *     { "tags": ["services", "faqs"] }              — multiple tags
- *     { "paths": ["/services", "/"] }               — multiple paths
- *
- * Available tags (mirror the tags used in api-functions.ts):
- *   settings, categories, services, featured, industries, blogs, case-studies,
- *   testimonials, video-testimonials, faqs,
- *   service-{slug}, category-{slug}, industry-{slug}, blog-{slug}, case-study-{slug}
- *
- * Flow:
- *   Admin updates content in CMS
- *   → Backend calls POST /api/revalidate with the relevant tag
- *   → Next.js invalidates the CDN/ISR cache for that tag
- *   → Next visitor triggers fresh generation of affected pages
- */
+import { NextResponse } from "next/server";
 
-import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+export async function POST(request: Request) {
+  try {
+    const token = process.env.GHL_API_TOKEN;
+    const locationId = process.env.GHL_LOCATION_ID;
 
-interface RevalidateBody {
-  tag?: string;
-  tags?: string[];
-  path?: string;
-  paths?: string[];
-}
+    if (!token || !locationId) {
+      return NextResponse.json(
+        { message: "GHL configuration is missing." },
+        { status: 500 }
+      );
+    }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  // ── 1. Authenticate ───────────────────────────────────────────────────────
-  const secret = process.env.REVALIDATE_SECRET;
+    const data = await request.json();
 
-  if (!secret) {
-    console.error('[/api/revalidate] REVALIDATE_SECRET is not set in environment variables.');
+    const {
+      full_name,
+      email,
+      phone,
+      website,
+      select_service,
+      business_challenge,
+      utmSource,
+    } = data;
+
+    if (
+      typeof full_name !== "string" ||
+      full_name.trim().length < 2 ||
+      typeof email !== "string" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      !Array.isArray(select_service) ||
+      select_service.length === 0 ||
+      !select_service.every((s: unknown) => typeof s === "string") ||
+      typeof business_challenge !== "string" ||
+      business_challenge.trim().length < 5
+    ) {
+      return NextResponse.json(
+        { message: "Please check your form details." },
+        { status: 400 }
+      );
+    }
+
+    const services = select_service as string[];
+    const nameParts = full_name.trim().split(/\s+/);
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(" ");
+
+    const response = await fetch(
+      "https://services.leadconnectorhq.com/contacts/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Version: "v3",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          locationId,
+          firstName,
+          lastName,
+          name: full_name.trim(),
+          email: email.trim(),
+          ...(typeof phone === "string" && phone.trim()
+            ? { phone: phone.trim() }
+            : {}),
+          ...(typeof website === "string" && website.trim()
+            ? { website: website.trim() }
+            : {}),
+          source:
+            typeof utmSource === "string" && utmSource.trim()
+              ? utmSource.trim().slice(0, 100)
+              : "Portfolio Contact Form",
+          tags: [
+            "Portfolio Contact Form",
+            ...services.map((s) => `Service: ${s}`),
+          ],
+        }),
+        cache: "no-store",
+      }
+    );
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      console.error("GHL contact creation failed:", response.status);
+
+      return NextResponse.json(
+        {
+          message:
+            response.status === 401 || response.status === 403
+              ? "GHL authentication or permissions failed."
+              : "Could not submit your request. Please try again.",
+        },
+        { status: 502 }
+      );
+    }
+
+    const contactId = result?.contact?.id;
+
+    // Save the business challenge and service selections as a contact note.
+    if (contactId) {
+      const noteResponse = await fetch(
+        `https://services.leadconnectorhq.com/contacts/${encodeURIComponent(contactId)}/notes`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Version: "v3",
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            title: "Portfolio Contact Form Submission",
+            body: [
+              `Business Challenge:\n${business_challenge.trim()}`,
+              `Selected Services: ${services.join(", ")}`,
+              ...(typeof utmSource === "string" && utmSource.trim()
+                ? [`UTM Source: ${utmSource.trim().slice(0, 100)}`]
+                : []),
+            ].join("\n\n"),
+          }),
+          cache: "no-store",
+        }
+      );
+
+      if (!noteResponse.ok) {
+        // Contact creation succeeded; don't invite a duplicate resubmission.
+        console.error(
+          "GHL contact note creation failed:",
+          noteResponse.status
+        );
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Your request has been submitted successfully.",
+    });
+  } catch (error) {
+    console.error(
+      "GHL contact route error:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+
     return NextResponse.json(
-      { revalidated: false, error: 'Server misconfiguration: secret not set.' },
+      { message: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }
-
-  const authHeader = request.headers.get('Authorization');
-  const providedToken = authHeader?.replace('Bearer ', '').trim();
-
-  if (!providedToken || providedToken !== secret) {
-    return NextResponse.json(
-      { revalidated: false, error: 'Unauthorized: invalid or missing token.' },
-      { status: 401 }
-    );
-  }
-
-  // ── 2. Parse body ─────────────────────────────────────────────────────────
-  let body: RevalidateBody;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json(
-      { revalidated: false, error: 'Invalid JSON body.' },
-      { status: 400 }
-    );
-  }
-
-  const { tag, tags = [], path, paths = [] } = body;
-
-  // Collect all tags & paths to revalidate
-  const allTags: string[] = [...tags, ...(tag ? [tag] : [])];
-  const allPaths: string[] = [...paths, ...(path ? [path] : [])];
-
-  if (allTags.length === 0 && allPaths.length === 0) {
-    return NextResponse.json(
-      {
-        revalidated: false,
-        error: 'Provide at least one of: tag, tags, path, paths.',
-      },
-      { status: 400 }
-    );
-  }
-
-  // ── 3. Revalidate ─────────────────────────────────────────────────────────
-  const revalidatedTags: string[] = [];
-  const revalidatedPaths: string[] = [];
-  const errors: string[] = [];
-
-  for (const t of allTags) {
-    try {
-      revalidateTag(t, 'page');
-      revalidatedTags.push(t);
-      console.log(`[/api/revalidate] Revalidated tag: "${t}"`);
-    } catch (err) {
-      const msg = `Failed to revalidate tag "${t}": ${String(err)}`;
-      console.error(`[/api/revalidate] ${msg}`);
-      errors.push(msg);
-    }
-  }
-
-  for (const p of allPaths) {
-    try {
-      revalidatePath(p, 'page');
-      revalidatedPaths.push(p);
-      console.log(`[/api/revalidate] Revalidated path: "${p}"`);
-    } catch (err) {
-      const msg = `Failed to revalidate path "${p}": ${String(err)}`;
-      console.error(`[/api/revalidate] ${msg}`);
-      errors.push(msg);
-    }
-  }
-
-  // ── 4. Respond ────────────────────────────────────────────────────────────
-  const hasSuccess = revalidatedTags.length > 0 || revalidatedPaths.length > 0;
-
-  return NextResponse.json(
-    {
-      revalidated: hasSuccess,
-      revalidatedTags,
-      revalidatedPaths,
-      ...(errors.length > 0 && { errors }),
-      timestamp: new Date().toISOString(),
-    },
-    { status: hasSuccess ? 200 : 500 }
-  );
-}
-
-// Reject non-POST methods
-export async function GET(): Promise<NextResponse> {
-  return NextResponse.json(
-    { error: 'Method not allowed. Use POST.' },
-    { status: 405 }
-  );
 }

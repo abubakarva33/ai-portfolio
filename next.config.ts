@@ -1,6 +1,15 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // ── Disable Caching ───────────────────────────────────────────────────────
+  // Prevent Next.js from serving stale pages during development
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+      static: 0,
+    },
+  },
+
   // ── Image Optimization ────────────────────────────────────────────────────
   images: {
     remotePatterns: [
@@ -44,6 +53,15 @@ const nextConfig: NextConfig = {
   // ── Headers ───────────────────────────────────────────────────────────────
   async headers() {
     return [
+      {
+        // Disable browser caching for all pages — ensures code changes are immediately visible
+        source: '/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
+          { key: 'Pragma', value: 'no-cache' },
+          { key: 'Expires', value: '0' },
+        ],
+      },
       {
         // Protect the revalidation endpoint — additional layer beyond secret token
         source: '/api/revalidate',
