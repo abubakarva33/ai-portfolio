@@ -69,9 +69,8 @@ function MultiSelectDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between gap-2 px-4 py-3 bg-white/5 border ${
-          hasError ? 'border-red-500' : 'border-white/10'
-        } rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all min-h-[48px]`}
+        className={`w-full flex items-center justify-between gap-2 px-4 py-3 bg-white/5 border ${hasError ? 'border-red-500' : 'border-white/10'
+          } rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all min-h-[48px]`}
       >
         {selected.length === 0 ? (
           <span className="text-gray-500">Select the areas you'd like to automate</span>
@@ -108,18 +107,16 @@ function MultiSelectDropdown({
               <li
                 key={option}
                 onClick={() => toggle(option)}
-                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                  isSelected
-                    ? 'bg-purple-500/15 text-white'
-                    : 'text-gray-300 hover:bg-white/5'
-                }`}
+                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${isSelected
+                  ? 'bg-purple-500/15 text-white'
+                  : 'text-gray-300 hover:bg-white/5'
+                  }`}
               >
                 <span
-                  className={`w-4.5 h-4.5 rounded flex items-center justify-center border shrink-0 transition-all ${
-                    isSelected
-                      ? 'bg-purple-600 border-purple-500'
-                      : 'border-white/20 bg-white/5'
-                  }`}
+                  className={`w-4.5 h-4.5 rounded flex items-center justify-center border shrink-0 transition-all ${isSelected
+                    ? 'bg-purple-600 border-purple-500'
+                    : 'border-white/20 bg-white/5'
+                    }`}
                   style={{ width: 18, height: 18 }}
                 >
                   {isSelected && (
@@ -214,8 +211,7 @@ function ContactSectionInner() {
   };
 
   const inputClass = (field: keyof ContactFormValues) =>
-    `w-full px-4 py-3 bg-white/5 border ${
-      errors[field] ? 'border-red-500' : 'border-white/10'
+    `w-full px-4 py-3 bg-white/5 border ${errors[field] ? 'border-red-500' : 'border-white/10'
     } rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all`;
 
   return (
@@ -267,125 +263,127 @@ function ContactSectionInner() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
-              {errorMsg && (
-                <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm">
-                  {errorMsg}
-                </div>
-              )}
+            // <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
+            //   {errorMsg && (
+            //     <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm">
+            //       {errorMsg}
+            //     </div>
+            //   )}
 
-              {/* Full Name */}
-              <div>
-                <label htmlFor="full_name" className="block text-sm font-medium text-white mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="full_name"
-                  {...register('full_name')}
-                  placeholder="John Doe"
-                  className={inputClass('full_name')}
-                />
-                {errors.full_name && <span className="text-red-400 text-xs mt-1 block">{errors.full_name.message}</span>}
-              </div>
 
-              {/* Email & Phone */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    {...register('email')}
-                    placeholder="yourmail@gmail.com"
-                    className={inputClass('email')}
-                  />
-                  {errors.email && <span className="text-red-400 text-xs mt-1 block">{errors.email.message}</span>}
-                </div>
+            //   <div>
+            //     <label htmlFor="full_name" className="block text-sm font-medium text-white mb-2">
+            //       Full Name
+            //     </label>
+            //     <input
+            //       type="text"
+            //       id="full_name"
+            //       {...register('full_name')}
+            //       placeholder="John Doe"
+            //       className={inputClass('full_name')}
+            //     />
+            //     {errors.full_name && <span className="text-red-400 text-xs mt-1 block">{errors.full_name.message}</span>}
+            //   </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
-                    Phone Number <span className="text-gray-500">(Optional)</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    {...register('phone')}
-                    placeholder="+1 234 567 8900"
-                    className={inputClass('phone')}
-                  />
-                  {errors.phone && <span className="text-red-400 text-xs mt-1 block">{errors.phone.message}</span>}
-                </div>
-              </div>
 
-              {/* Website */}
-              <div>
-                <label htmlFor="website" className="block text-sm font-medium text-white mb-2">
-                  Website <span className="text-gray-500">(Optional)</span>
-                </label>
-                <input
-                  type="url"
-                  id="website"
-                  {...register('website')}
-                  placeholder="https://yourwebsite.com"
-                  className={inputClass('website')}
-                />
-                {errors.website && <span className="text-red-400 text-xs mt-1 block">{errors.website.message}</span>}
-              </div>
+            //   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            //     <div>
+            //       <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+            //         Email
+            //       </label>
+            //       <input
+            //         type="email"
+            //         id="email"
+            //         {...register('email')}
+            //         placeholder="yourmail@gmail.com"
+            //         className={inputClass('email')}
+            //       />
+            //       {errors.email && <span className="text-red-400 text-xs mt-1 block">{errors.email.message}</span>}
+            //     </div>
 
-              {/* Select Service — Multi‑select */}
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Select Service
-                </label>
-                <MultiSelectDropdown
-                  options={SERVICE_OPTIONS}
-                  selected={selectedServices}
-                  onChange={setSelectedServices}
-                  hasError={!!errors.select_service}
-                />
-                {errors.select_service && (
-                  <span className="text-red-400 text-xs mt-1 block">{errors.select_service.message}</span>
-                )}
-              </div>
+            //     <div>
+            //       <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
+            //         Phone Number <span className="text-gray-500">(Optional)</span>
+            //       </label>
+            //       <input
+            //         type="tel"
+            //         id="phone"
+            //         {...register('phone')}
+            //         placeholder="+1 234 567 8900"
+            //         className={inputClass('phone')}
+            //       />
+            //       {errors.phone && <span className="text-red-400 text-xs mt-1 block">{errors.phone.message}</span>}
+            //     </div>
+            //   </div>
 
-              {/* Business Challenge */}
-              <div>
-                <label htmlFor="business_challenge" className="block text-sm font-medium text-white mb-2">
-                  Business Challenge
-                </label>
-                <textarea
-                  id="business_challenge"
-                  rows={4}
-                  {...register('business_challenge')}
-                  placeholder="Tell me about your business, its biggest challenges, and what you'd like to improve"
-                  className={`${inputClass('business_challenge')} resize-none`}
-                ></textarea>
-                {errors.business_challenge && (
-                  <span className="text-red-400 text-xs mt-1 block">{errors.business_challenge.message}</span>
-                )}
-              </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full md:w-auto px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-[#6938ef] to-[#8b5cf6] hover:from-[#5b2bd1] hover:to-[#7c3aed] text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-500/25 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    Let&apos;s Connect
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
-            </form>
+            //   <div>
+            //     <label htmlFor="website" className="block text-sm font-medium text-white mb-2">
+            //       Website <span className="text-gray-500">(Optional)</span>
+            //     </label>
+            //     <input
+            //       type="url"
+            //       id="website"
+            //       {...register('website')}
+            //       placeholder="https://yourwebsite.com"
+            //       className={inputClass('website')}
+            //     />
+            //     {errors.website && <span className="text-red-400 text-xs mt-1 block">{errors.website.message}</span>}
+            //   </div>
+
+
+            //   <div>
+            //     <label className="block text-sm font-medium text-white mb-2">
+            //       Select Service
+            //     </label>
+            //     <MultiSelectDropdown
+            //       options={SERVICE_OPTIONS}
+            //       selected={selectedServices}
+            //       onChange={setSelectedServices}
+            //       hasError={!!errors.select_service}
+            //     />
+            //     {errors.select_service && (
+            //       <span className="text-red-400 text-xs mt-1 block">{errors.select_service.message}</span>
+            //     )}
+            //   </div>
+
+
+            //   <div>
+            //     <label htmlFor="business_challenge" className="block text-sm font-medium text-white mb-2">
+            //       Business Challenge
+            //     </label>
+            //     <textarea
+            //       id="business_challenge"
+            //       rows={4}
+            //       {...register('business_challenge')}
+            //       placeholder="Tell me about your business, its biggest challenges, and what you'd like to improve"
+            //       className={`${inputClass('business_challenge')} resize-none`}
+            //     ></textarea>
+            //     {errors.business_challenge && (
+            //       <span className="text-red-400 text-xs mt-1 block">{errors.business_challenge.message}</span>
+            //     )}
+            //   </div>
+
+            //   <button
+            //     type="submit"
+            //     disabled={isSubmitting}
+            //     className="w-full md:w-auto px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-[#6938ef] to-[#8b5cf6] hover:from-[#5b2bd1] hover:to-[#7c3aed] text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-500/25 disabled:opacity-70 disabled:cursor-not-allowed"
+            //   >
+            //     {isSubmitting ? (
+            //       <>
+            //         <Loader2 className="w-5 h-5 animate-spin" />
+            //         Submitting...
+            //       </>
+            //     ) : (
+            //       <>
+            //         Let&apos;s Connect
+            //         <ArrowRight className="w-5 h-5" />
+            //       </>
+            //     )}
+            //   </button>
+            // </form>
+            <iframe src="https://links.abubakar375.online/widget/form/hBZwZwdJuDN8mzBXggPa" style={{ "width": "100%", "height": "800px", "border": "none", "borderRadius": "8px", "overflow": "hidden", "backgroundColor": "!transparent" }} id="inline-hBZwZwdJuDN8mzBXggPa" data-layout="{id: 'INLINE'}" data-trigger-type="alwaysShow" data-trigger-value="" data-activation-type="alwaysActivated" data-activation-value="" data-deactivation-type="neverDeactivate" data-deactivation-value="" data-form-name="Contact Form" data-height="582" data-layout-iframe-id="inline-hBZwZwdJuDN8mzBXggPa" data-form-id="hBZwZwdJuDN8mzBXggPa" data-cookie-consent="true" data-cookie-consent-provider="auto" title="Contact Form"></iframe>
+
           )}
         </div>
 

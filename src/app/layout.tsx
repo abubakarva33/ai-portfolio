@@ -37,6 +37,18 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <head>
+        <Script id="clear-caches" strategy="beforeInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(regs){
+                regs.forEach(function(r){ r.unregister(); });
+              });
+            }
+            if (window.caches) {
+              caches.keys().then(function(keys){ keys.forEach(function(k){ caches.delete(k); }); });
+            }
+          `}
+        </Script>
         {/* Google Analytics (GA4) */}
         {gaId && (
           <>

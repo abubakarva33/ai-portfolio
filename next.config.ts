@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  generateEtags: false,
   // ── Disable Caching ───────────────────────────────────────────────────────
   // Prevent Next.js from serving stale pages during development
   experimental: {
@@ -12,6 +13,7 @@ const nextConfig: NextConfig = {
 
   // ── Image Optimization ────────────────────────────────────────────────────
   images: {
+    unoptimized: true,
     remotePatterns: [
       // Webflow CDN images
       {

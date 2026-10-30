@@ -20,13 +20,13 @@ const platforms: PlatformItem[] = [
   { name: 'Airtable', capability: 'Database & automation base', type: 'icon', icon: Database, category: 'automation' },
   
   // Frontend
-  { name: 'React.js', capability: 'UI component library', type: 'image', src: '/images/react.svg', category: 'frontend' },
-  { name: 'Next.js', capability: 'Full-stack React framework', type: 'image', src: '/images/nextjs.svg', category: 'frontend' },
+  { name: 'React.js', capability: 'UI component library', type: 'icon', icon: Code2, category: 'frontend' },
+  { name: 'Next.js', capability: 'Full-stack React framework', type: 'icon', icon: Layers, category: 'frontend' },
   { name: 'TypeScript', capability: 'Type-safe JavaScript', type: 'icon', icon: Code2, category: 'frontend' },
   { name: 'Tailwind CSS', capability: 'Utility-first CSS framework', type: 'icon', icon: Layers, category: 'frontend' },
   
   // Backend
-  { name: 'Node.js', capability: 'Server-side JavaScript', type: 'image', src: '/images/nodejs.svg', category: 'backend' },
+  { name: 'Node.js', capability: 'Server-side JavaScript', type: 'icon', icon: Server, category: 'backend' },
   { name: 'Express.js', capability: 'REST API framework', type: 'icon', icon: Server, category: 'backend' },
   { name: 'MongoDB', capability: 'NoSQL database', type: 'icon', icon: Database, category: 'backend' },
   { name: 'MySQL', capability: 'Relational database', type: 'icon', icon: Database, category: 'backend' },
