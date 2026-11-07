@@ -37,6 +37,7 @@
   --color-border: var(--border);
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+  --font-display: var(--font-display);
 }
 
 html {

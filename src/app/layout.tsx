@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Footer } from "@/components/layout/Footer";
@@ -15,6 +15,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const display = Space_Grotesk({
+  variable: "--font-display",
   subsets: ["latin"],
 });
 
@@ -67,7 +72,7 @@ export default function RootLayout({
           </>
         )}  
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white pb-28 md:pb-32">
+      <body className={`min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500 selection:text-white pb-28 md:pb-32 ${display.variable}`}>
         <ScrollProgressBar />
           <main className="flex-1">
             <UtmProvider>{children}</UtmProvider>

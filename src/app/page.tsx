@@ -7,7 +7,7 @@
 
 import type { Metadata } from 'next';
 import { getFAQs } from '@/lib/api-functions';
-import { Hero } from '@/components/sections/Hero';
+import HeroCentered from '@/components/sections/HeroCentered';
 import { MetricsCounterBar } from '@/components/sections/MetricsCounterBar';
 import dynamic from 'next/dynamic';
 
@@ -74,7 +74,7 @@ export default async function HomePage() {
   return (
     <div className="relative overflow-clip">
       {/* Hero Section */}
-      <Hero />
+      <HeroCentered />
 
       {/* White card content block */}
       <section className="bg-white rounded-3xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] border border-gray-100 -mt-16 md:-mt-5 relative z-20 overflow-clip">
