@@ -17,7 +17,7 @@ export const BottomNav = () => {
   const pathname = usePathname();
 
   const renderNavLink = (item: typeof navItems[0]) => {
-    const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+    const isActive = item.href === '/' ? pathname === '/' : (pathname?.startsWith(item.href) ?? false);
 
     return (
       <Link

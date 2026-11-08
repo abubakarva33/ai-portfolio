@@ -12,6 +12,9 @@ import { MetricsCounterBar } from '@/components/sections/MetricsCounterBar';
 import dynamic from 'next/dynamic';
 
 const FAQAccordion = dynamic(() => import(/* webpackPrefetch: true */ '@/components/ui/FAQAccordion').then((mod) => mod.FAQAccordion));
+const LeadLeaksSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/LeadLeaksSection').then((mod) => mod.LeadLeaksSection));
+const LeadComparisonSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/LeadComparisonSection').then((mod) => mod.LeadComparisonSection));
+const LeadCalculatorSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/LeadCalculatorSection').then((mod) => mod.LeadCalculatorSection));
 const HowItWorksSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/HowItWorksSection').then((mod) => mod.HowItWorksSection));
 const TeamSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/TeamSection').then((mod) => mod.TeamSection));
 const UpworkReviewsSection = dynamic(() => import(/* webpackPrefetch: true */ '@/components/sections/UpworkReviewsSection').then((mod) => mod.UpworkReviewsSection));
@@ -86,6 +89,13 @@ export default async function HomePage() {
           <ReputationServicesOverview />
         </div>
       </section>
+
+      {/* Process / How I Work */}
+      <div className="py-6 space-y-12 md:space-y-16">
+        <LeadLeaksSection />
+        <LeadComparisonSection />
+        <LeadCalculatorSection />
+      </div>
 
       {/* Process / How I Work */}
       <HowItWorksSection />

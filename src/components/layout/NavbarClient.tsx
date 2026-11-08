@@ -136,7 +136,7 @@ export function NavbarClient({ settings, categories }: NavbarClientProps) {
                 <button
                   className={cn(
                     'flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer',
-                    pathname.startsWith('/services') ? 'text-violet-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    pathname?.startsWith('/services') ? 'text-violet-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'
                   )}
                 >
                   <span>Services</span>
@@ -231,7 +231,7 @@ export function NavbarClient({ settings, categories }: NavbarClientProps) {
                 href="/blog"
                 className={cn(
                   'px-3.5 py-2 text-sm font-medium rounded-lg transition-colors',
-                  pathname.startsWith('/blog') ? 'text-violet-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  pathname?.startsWith('/blog') ? 'text-violet-400 bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'
                 )}
               >
                 Blog

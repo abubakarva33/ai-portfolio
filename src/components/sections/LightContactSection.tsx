@@ -21,8 +21,8 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 
 function LightContactSectionInner() {
   const searchParams = useSearchParams();
-  const mode = searchParams.get('mode');
-  const service = searchParams.get('service');
+  const mode = searchParams?.get('mode');
+  const service = searchParams?.get('service');
 
   const [isSuccess, setIsSuccess] = useState(mode === 'strategy');
   const [isSubmitting, setIsSubmitting] = useState(false);
