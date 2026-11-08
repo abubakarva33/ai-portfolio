@@ -459,3 +459,12 @@ body {
   outline: 2px solid #f97316;
   outline-offset: 4px;
 }
+
+/* ── LeadConnector Chat Widget ────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  chat-widget {
+    bottom: 92px !important;
+  }
+}
+
+

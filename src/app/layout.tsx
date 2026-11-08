@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/layout/BottomNav";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollProgressBar } from "@/components/layout/ScrollProgressBar";
 import { UtmProvider } from "@/components/providers/UtmProvider";
+import { GhlChatWidget } from "@/components/chat/GhlChatWidget";
 import Script from "next/script";
 import "./globals.css";
 
@@ -79,6 +80,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <BottomNav />
+          <GhlChatWidget />
       </body>
     </html>
   );
